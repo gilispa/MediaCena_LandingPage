@@ -1,0 +1,27 @@
+{
+  "curtains": {
+    "source": "fondoCortinasRojas.jpg",
+    "width": 3456,
+    "height": 2304
+  },
+  "roses": {
+    "source": "fondoRosasRojas.jpg",
+    "width": 4222,
+    "height": 2818
+  },
+  "table": {
+    "source": "katie-puzatova-w9hsioE2Zc4-unsplash.jpg",
+    "width": 3743,
+    "height": 4986
+  },
+  "candles": {
+    "source": "klara-kulikova-rYzppyjo4DQ-unsplash.jpg",
+    "width": 3648,
+    "height": 5472
+  },
+  "community": {
+    "source": "tanya-prodaan-7LVZt5YG69g-unsplash.jpg",
+    "width": 2969,
+    "height": 1914
+  }
+}
