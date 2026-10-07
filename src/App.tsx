@@ -1,22 +1,51 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { PARTNER_LOGOS, TICKETS_URL } from "./config";
+import { EVENT_LOGOS, PARTNER_LOGOS, TICKETS_URL } from "./config";
 
-type PhotoName = "curtains" | "roses" | "table" | "candles" | "community";
+type PhotoName =
+  | "curtains"
+  | "roses"
+  | "table"
+  | "candles"
+  | "community"
+  | "event-sparklers-red"
+  | "event-sparklers"
+  | "event-sparklers-amber-05"
+  | "event-music-1"
+  | "event-music-2"
+  | "event-music-3"
+  | "event-community"
+  | "event-presenter"
+  | "cause-celebration"
+  | "manifesto-sparklers";
 
-function Star({ className = "" }: { className?: string }) {
+function Star({
+  className = "",
+  variant = 2,
+}: {
+  className?: string;
+  variant?: 1 | 2 | 3;
+}) {
   return (
-    <svg
+    <img
       className={`star ${className}`}
-      viewBox="0 0 40 40"
-      fill="none"
+      src={`/assets/star-${variant}.webp`}
+      alt=""
+      width="256"
+      height="256"
       aria-hidden="true"
-    >
-      <path
-        d="M20 0C21.9 14.1 25.9 18.1 40 20C25.9 21.9 21.9 25.9 20 40C18.1 25.9 14.1 21.9 0 20C14.1 18.1 18.1 14.1 20 0Z"
-        fill="currentColor"
-      />
-    </svg>
+    />
+  );
+}
+
+function StarField() {
+  return (
+    <div className="star-field" aria-hidden="true">
+      <Star />
+      <Star variant={3} />
+      <Star />
+      <Star />
+    </div>
   );
 }
 
@@ -56,10 +85,21 @@ function Photo({
     table: [3743, 4986],
     candles: [3648, 5472],
     community: [2969, 1914],
+    "event-sparklers-red": [2048, 1365],
+    "event-sparklers": [2048, 1365],
+    "event-sparklers-amber-05": [2048, 1365],
+    "event-music-1": [2048, 1365],
+    "event-music-2": [2048, 1365],
+    "event-music-3": [2048, 1365],
+    "event-community": [2048, 1365],
+    "event-presenter": [2048, 1365],
+    "cause-celebration": [2048, 1365],
+    "manifesto-sparklers": [1008, 1066],
   }[name];
-  return (
+  const eventPhoto = name.startsWith("event-");
+  const image = (
     <img
-      className={`photo ${className}`}
+      className={eventPhoto ? "event-photo-image" : `photo ${className}`}
       src={`/assets/${name}-960.webp`}
       srcSet={[640, 960, 1440, 1920]
         .map((width) => `/assets/${name}-${width}.webp ${width}w`)
@@ -72,6 +112,11 @@ function Photo({
       fetchPriority={eager ? "high" : undefined}
       decoding="async"
     />
+  );
+  return eventPhoto ? (
+    <span className={`photo event-photo ${className}`}>{image}</span>
+  ) : (
+    image
   );
 }
 
@@ -111,19 +156,13 @@ function Reveal({
   );
 }
 
-function TicketLink({
-  light = false,
-  short = false,
-}: {
-  light?: boolean;
-  short?: boolean;
-}) {
+function TicketLink({ light = false }: { light?: boolean }) {
   return (
     <a
       className={`ticket-link ${light ? "ticket-link-light" : ""}`}
-      href={TICKETS_URL === "#" ? "#boletos" : TICKETS_URL}
+      href={TICKETS_URL}
     >
-      {short ? "Boletos" : "Comprar boletos"}
+      Comprar boletos
       <Arrow />
     </a>
   );
@@ -164,6 +203,9 @@ function Navbar() {
         id="main-navigation"
         className="navigation"
       >
+        <a href="#inicio" onClick={() => setOpen(false)}>
+          Inicio
+        </a>
         <a href="#la-noche" onClick={() => setOpen(false)}>
           La noche
         </a>
@@ -172,7 +214,7 @@ function Navbar() {
         </a>
         <a
           className="nav-ticket"
-          href="#boletos"
+          href={TICKETS_URL}
           onClick={() => setOpen(false)}
         >
           Boletos <Arrow />
@@ -221,9 +263,6 @@ function Hero() {
       <div className="hero-shade" />
       <div className="hero-border" aria-hidden="true" />
       <div className="hero-content">
-        <p className="eyebrow hero-edition">
-          <span /> UNA NOCHE. UN MAÑANA. <span />
-        </p>
         <h1 id="hero-title">
           <span className="hero-brand brand">MEDIA CENA ’26</span>
           <img
@@ -236,25 +275,24 @@ function Hero() {
           />
         </h1>
         <p className="hero-description">
-          Una noche para celebrar el presente
-          <br />y abrirle paso al futuro.
+          Una noche para celebrar el presente y abrirle paso al futuro.
         </p>
         <div className="hero-details eyebrow">
           <time dateTime="2026-11-05">05 NOV 2026</time>
-          <Star />
+          <span aria-hidden="true">·</span>
           <span>7:00 PM — 11:00 PM</span>
-          <Star />
+          <span aria-hidden="true">·</span>
           <span>DOMO</span>
         </div>
         <TicketLink light />
         <p className="benefit">A beneficio de Líderes del Mañana</p>
       </div>
       <div className="hero-bottom">
-        <span className="eyebrow">
-          EL PRESENTE NOS REÚNE.
-          <br />
-          EL FUTURO NOS INSPIRA.
-        </span>
+        <img
+          className="hero-logo hero-logo-tec"
+          {...EVENT_LOGOS.tec}
+          decoding="async"
+        />
         <a
           className="scroll-cue"
           href="#manifiesto"
@@ -263,11 +301,11 @@ function Hero() {
           <span>Descubre la noche</span>
           <Arrow down />
         </a>
-        <span className="eyebrow hero-bottom-year">
-          05 NOVIEMBRE 2026
-          <br />
-          TEC DE MONTERREY
-        </span>
+        <img
+          className="hero-logo hero-logo-lideres"
+          {...EVENT_LOGOS.lideres}
+          decoding="async"
+        />
       </div>
     </section>
   );
@@ -281,10 +319,7 @@ function Manifesto() {
       aria-labelledby="manifesto-title"
     >
       <Reveal className="manifesto-copy">
-        <p className="eyebrow section-label">
-          <Star />
-          05 · 11 · 26
-        </p>
+        <p className="eyebrow section-label">05 · 11 · 26</p>
         <h2 id="manifesto-title">
           Hay noches
           <br />
@@ -304,6 +339,7 @@ function Manifesto() {
           <Photo
             name="candles"
             alt="Velas encendidas junto a flores de color vino"
+            className="manifesto-photo"
             sizes="(max-width: 767px) 80vw, 33vw"
           />
           <span className="image-caption eyebrow">
@@ -333,30 +369,27 @@ function EventDetails() {
     >
       <Reveal className="event-details-inner">
         <div className="event-date">
-          <span className="eyebrow">LA FECHA</span>
           <time dateTime="2026-11-05">
             <span className="event-number">05</span>
-            <span className="eyebrow">NOVIEMBRE · 2026</span>
+            <span className="eyebrow">NOVIEMBRE 2026</span>
           </time>
         </div>
-        <div className="event-time">
-          <span className="eyebrow">EL ENCUENTRO</span>
+        <span className="event-connector event-at">a las</span>
+        <time className="event-time event-start" dateTime="2026-11-05T19:00">
           <span className="event-number">
-            7:00<small>PM</small>
+            7<small>PM</small>
           </span>
-          <span className="eyebrow">EL INICIO DE LA NOCHE</span>
-        </div>
+        </time>
+        <span className="event-connector event-until">hasta</span>
+        <time className="event-time event-end" dateTime="2026-11-05T23:00">
+          <span className="event-number">
+            11<small>PM</small>
+          </span>
+        </time>
+        <span className="event-connector event-in">en</span>
         <div className="event-place">
-          <Star />
           <span className="event-venue">Domo</span>
-          <span className="eyebrow">TEC DE MONTERREY</span>
-        </div>
-        <div className="event-time">
-          <span className="eyebrow">HASTA</span>
-          <span className="event-number">
-            11:00<small>PM</small>
-          </span>
-          <span className="eyebrow">EL ÚLTIMO MOMENTO</span>
+          <span className="event-campus brand">TEC DE MONTERREY</span>
         </div>
       </Reveal>
     </section>
@@ -371,10 +404,6 @@ function Experience() {
       aria-labelledby="experience-title"
     >
       <Reveal className="experience-heading">
-        <p className="eyebrow section-label">
-          <Star />
-          LA NOCHE
-        </p>
         <h2 id="experience-title">
           Más que <span>una cena.</span>
         </h2>
@@ -385,13 +414,12 @@ function Experience() {
           <figure>
             <div className="photo-wrap">
               <Photo
-                name="table"
-                alt="Una mesa preparada con rosas oscuras, copas y velas"
-                sizes="(max-width: 767px) 90vw, 39vw"
+                name="event-community"
+                alt="Nuestra comunidad compartiendo la celebración"
+                sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1800px) 30vw, 515px"
               />
             </div>
             <figcaption>
-              <span className="eyebrow photo-index">01 / COMPARTIR</span>
               <h3>
                 Alrededor de
                 <br />
@@ -407,13 +435,12 @@ function Experience() {
           <figure>
             <div className="photo-wrap">
               <Photo
-                name="community"
-                alt="Amigos compartiendo una cena bajo una iluminación cálida"
-                sizes="(max-width: 767px) 90vw, 43vw"
+                name="event-music-1"
+                alt="Músicos tocando durante una edición anterior de Media Cena"
+                sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1800px) 30vw, 515px"
               />
             </div>
             <figcaption>
-              <span className="eyebrow photo-index">02 / VIVIR</span>
               <h3>
                 Momentos que
                 <br />
@@ -430,13 +457,12 @@ function Experience() {
           <figure>
             <div className="photo-wrap arch-photo">
               <Photo
-                name="roses"
-                alt="Detalle de pétalos de rosas rojas"
-                sizes="(max-width: 767px) 65vw, 24vw"
+                name="event-music-3"
+                alt="Integrantes del grupo musical compartiendo el escenario"
+                sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1800px) 30vw, 515px"
               />
             </div>
             <figcaption>
-              <span className="eyebrow photo-index">03 / CONTRIBUIR</span>
               <h3>
                 Un gesto hoy.
                 <br />
@@ -449,16 +475,6 @@ function Experience() {
             </figcaption>
           </figure>
         </Reveal>
-        <div className="gallery-ornament" aria-hidden="true">
-          <Star />
-          <span>
-            JUNTOS,
-            <br />
-            TODO TIENE
-            <br />
-            OTRO SENTIDO.
-          </span>
-        </div>
       </div>
     </section>
   );
@@ -467,11 +483,16 @@ function Experience() {
 function Transition() {
   return (
     <section className="transition" aria-label="Tonight for Tomorrow">
+      <Photo
+        name="roses"
+        alt=""
+        className="transition-background"
+        sizes="100vw"
+      />
+      <div className="transition-shade" />
       <div className="transition-orbit" aria-hidden="true" />
-      <Star className="transition-star-one" />
-      <Star className="transition-star-two" />
+      <StarField />
       <Reveal>
-        <p className="eyebrow">EL SENTIDO DE ESTA NOCHE</p>
         <img
           className="transition-tagline"
           src="/assets/tonight-for-tomorrow.webp"
@@ -481,8 +502,7 @@ function Transition() {
           loading="lazy"
         />
         <p className="body-copy">
-          Una noche para celebrar el presente y apostar por
-          <br className="desktop-break" /> quienes construirán el mañana.
+          Apostemos por un futuro donde el talento encuentre su oportunidad.
         </p>
       </Reveal>
     </section>
@@ -492,89 +512,61 @@ function Transition() {
 function Cause() {
   return (
     <section
-      className="cause section-shell"
+      className="cause-section"
       id="la-causa"
       aria-labelledby="cause-title"
     >
-      <Reveal className="cause-photo">
-        <div className="photo-wrap">
-          <Photo
-            name="community"
-            alt="Una comunidad reunida alrededor de una cena a la luz de las velas"
-            sizes="(max-width: 767px) 90vw, 44vw"
-          />
-        </div>
-        <p className="eyebrow image-note">EL FUTURO EMPIEZA CON NOSOTROS.</p>
-      </Reveal>
-      <Reveal className="cause-copy">
-        <p className="eyebrow section-label">
-          <Star />
-          POR QUÉ ESTAMOS AQUÍ
-        </p>
-        <h2 id="cause-title">
-          Una oportunidad
-          <br />
-          puede cambiar
-          <br />
-          <span>una vida.</span>
-        </h2>
-        <p className="body-copy">
-          Lo recaudado durante Media Cena será destinado a apoyar la beca
-          Líderes del Mañana, ayudando a abrir nuevas oportunidades educativas
-          para jóvenes con talento, liderazgo y deseo de transformar su
-          comunidad.
-        </p>
-        <div className="cause-signature">
-          <Star />
-          <span>
-            A beneficio de
+      <div className="cause section-shell">
+        <Reveal className="cause-photo">
+          <div className="photo-wrap">
+            <Photo
+              name="cause-celebration"
+              alt="Jóvenes celebrando juntos con bengalas encendidas"
+              className="cause-event-photo"
+              sizes="(max-width: 767px) 90vw, 44vw"
+            />
+          </div>
+          <p className="eyebrow image-note">EL FUTURO EMPIEZA CON NOSOTROS.</p>
+        </Reveal>
+        <Reveal className="cause-copy">
+          <h2 id="cause-title">
+            <span className="cause-intro">A beneficio de la beca</span>
+            Líderes
             <br />
-            <strong>Líderes del Mañana</strong>
-          </span>
-        </div>
-      </Reveal>
-    </section>
-  );
-}
-
-function Community() {
-  return (
-    <section className="community" aria-labelledby="community-title">
-      <Photo
-        name="community"
-        alt="Personas reunidas alrededor de una mesa para compartir una noche especial"
-        sizes="100vw"
-      />
-      <div className="community-shade" />
-      <Reveal className="community-copy">
-        <p className="eyebrow">UNA MISMA MESA. UNA MISMA CAUSA.</p>
-        <h2 id="community-title">
-          Esta noche también
-          <br />
-          lleva <span>tu nombre.</span>
-        </h2>
-        <p className="body-copy">
-          Estudiantes, colaboradores, amigos y miembros de nuestra comunidad
-          reunidos por una misma causa.
-        </p>
-        <Star />
-      </Reveal>
+            del Mañana.
+          </h2>
+          <p className="cause-lead">Una oportunidad puede cambiar una vida.</p>
+          <p className="body-copy">
+            Lo recaudado durante Media Cena será destinado a apoyar la beca
+            Líderes del Mañana, ayudando a abrir nuevas oportunidades educativas
+            para jóvenes con talento, liderazgo y deseo de transformar su
+            comunidad.
+          </p>
+        </Reveal>
+      </div>
     </section>
   );
 }
 
 function FinalInvitation() {
-  const [showNotice, setShowNotice] = useState(false);
   return (
     <section
       className="invitation"
       id="boletos"
       aria-labelledby="invitation-title"
     >
+      <Photo
+        name="event-sparklers-amber-05"
+        alt="Celebración con bengalas iluminada en tonos ámbar"
+        className="invitation-background"
+        sizes="100vw"
+      />
+      <div className="invitation-shade" />
       <div className="invitation-frame" aria-hidden="true" />
-      <Reveal>
-        <p className="brand">MEDIA CENA ’26</p>
-        <Star />
+      <Star className="invitation-spark-one" />
+      <Star className="invitation-spark-two" variant={3} />
+      <Reveal className="invitation-copy">
+        <p className="invitation-kicker">Esta noche también lleva tu nombre.</p>
         <h2 id="invitation-title">
           Hay un lugar para ti
           <br />
@@ -585,27 +577,10 @@ function FinalInvitation() {
           <span>7:00 PM</span>
           <span>DOMO</span>
         </div>
-        {TICKETS_URL === "#" ? (
-          <button
-            className="ticket-link"
-            aria-controls="ticket-notice"
-            aria-expanded={showNotice}
-            onClick={() => setShowNotice(true)}
-          >
-            Comprar boletos
-            <Arrow />
-          </button>
-        ) : (
-          <TicketLink />
-        )}
+        <TicketLink light />
         <p className="invitation-impact">
           Tu asistencia también es parte del impacto.
         </p>
-        <div className="ticket-notice" id="ticket-notice" role="status">
-          {showNotice && (
-            <p>La venta de boletos estará disponible próximamente.</p>
-          )}
-        </div>
       </Reveal>
     </section>
   );
@@ -614,31 +589,10 @@ function FinalInvitation() {
 function Footer() {
   return (
     <footer className="footer section-shell">
-      <div className="footer-top">
-        <div>
-          <a className="brand" href="#inicio">
-            MEDIA CENA ’26
-          </a>
-          <p className="footer-tagline">Tonight for Tomorrow.</p>
-        </div>
-        <Star />
-        <div className="footer-purpose">
-          <p>Tecnológico de Monterrey</p>
-          <p>A beneficio de Líderes del Mañana</p>
-        </div>
-      </div>
-      {PARTNER_LOGOS.length > 0 && (
-        <div className="partner-logos" aria-label="Organizadores y aliados">
-          {PARTNER_LOGOS.map((logo) => (
-            <img key={logo.src} {...logo} loading="lazy" />
-          ))}
-        </div>
-      )}
-      <div className="footer-bottom">
-        <span className="eyebrow">05 DE NOVIEMBRE DE 2026 · DOMO</span>
-        <a href="#inicio" className="text-link">
-          Volver al inicio <Arrow down />
-        </a>
+      <div className="partner-logos" aria-label="Organizadores y aliados">
+        {PARTNER_LOGOS.map((logo) => (
+          <img key={logo.src} {...logo} loading="lazy" />
+        ))}
       </div>
     </footer>
   );
@@ -658,7 +612,6 @@ export default function App() {
         <Experience />
         <Transition />
         <Cause />
-        <Community />
         <FinalInvitation />
       </main>
       <Footer />

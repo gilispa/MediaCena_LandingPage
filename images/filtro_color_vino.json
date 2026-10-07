@@ -1,0 +1,79 @@
+{
+  "treatment": "Soft wine color only",
+  "filters": {
+    "grayscale": 0.45,
+    "sepia": 0.08,
+    "saturation": 0.9
+  },
+  "wine": {
+    "color": "#72100f",
+    "opacity": 0.16,
+    "blendMode": "color"
+  },
+  "luminance": "Original luminance retained using color blending; no brightness or contrast filter",
+  "photos": [
+    {
+      "source": "bengalasRojo_personas.jpg",
+      "export": "bengalasRojo_personas_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.11,
+      "averageAbsoluteLuminanceDifference": 1.542
+    },
+    {
+      "source": "bengalas_personas.jpg",
+      "export": "bengalas_personas_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.096,
+      "averageAbsoluteLuminanceDifference": 1.107
+    },
+    {
+      "source": "musica1.jpg",
+      "export": "musica1_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.064,
+      "averageAbsoluteLuminanceDifference": 1.186
+    },
+    {
+      "source": "musica2.jpg",
+      "export": "musica2_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.181,
+      "averageAbsoluteLuminanceDifference": 2.469
+    },
+    {
+      "source": "musica3.jpg",
+      "export": "musica3_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.04,
+      "averageAbsoluteLuminanceDifference": 1.262
+    },
+    {
+      "source": "personas.jpg",
+      "export": "personas_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.103,
+      "averageAbsoluteLuminanceDifference": 2.394
+    },
+    {
+      "source": "presentadora.jpg",
+      "export": "presentadora_color_vino.jpg",
+      "width": 2048,
+      "height": 1365,
+      "originalPreserved": true,
+      "averageLuminanceChange": -0.073,
+      "averageAbsoluteLuminanceDifference": 2.249
+    }
+  ]
+}

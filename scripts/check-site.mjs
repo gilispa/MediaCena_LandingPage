@@ -12,11 +12,16 @@ const browser = await chromium.launch({
 });
 const results = [];
 const siteUrl = process.env.SITE_URL || "http://127.0.0.1:5173";
+const ticketsUrl =
+  "https://eventos.tec.mx/s/lt-event?language=es_MX&id=a5uUG000000RGrtYAG";
 try {
-  for (const width of [375, 768, 1024, 1440, 1920]) {
+  for (const width of [320, 375, 390, 430, 768, 1024, 1440, 1920]) {
+    const mobile = width < 768;
     const context = await browser.newContext({
-      viewport: { width, height: 900 },
+      viewport: { width, height: mobile ? 812 : 900 },
       deviceScaleFactor: 1,
+      isMobile: mobile,
+      hasTouch: mobile,
     });
     const page = await context.newPage();
     const errors = [];
@@ -89,7 +94,28 @@ try {
       scrollTo({ top: 0, behavior: "instant" });
     });
     await page.screenshot({ path: `.work/full-${width}.png`, fullPage: true });
-    if (width === 375) {
+    if (width === 375 || width === 1440) {
+      // Prevent a smooth scroll or fixed navigation from obscuring section captures.
+      const captureStyle = await page.addStyleTag({
+        content:
+          "html { scroll-behavior: auto !important; } .navbar, .skip-link { visibility: hidden !important; }",
+      });
+      for (const [name, selector] of Object.entries({
+        manifesto: "#manifiesto",
+        details: ".event-details",
+        experience: "#la-noche",
+        transition: ".transition",
+        cause: "#la-causa",
+        invitation: "#boletos",
+      })) {
+        await page
+          .locator(selector)
+          .screenshot({ path: `.work/${name}-${width}.png` });
+      }
+      await captureStyle.evaluate((node) => node.remove());
+      await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
+    }
+    if (mobile) {
       const toggle = page.locator(".menu-toggle");
       await toggle.click();
       assert.equal(await toggle.getAttribute("aria-expanded"), "true");
@@ -115,8 +141,7 @@ try {
         ),
       "Anchor offset",
     );
-    if (width === 375)
-      await page.getByRole("button", { name: "Abrir menú" }).click();
+    if (mobile) await page.getByRole("button", { name: "Abrir menú" }).click();
     await page
       .getByRole("navigation")
       .getByRole("link", { name: "La causa" })
@@ -124,11 +149,24 @@ try {
     await page.waitForTimeout(1200);
     assert.equal(new URL(page.url()).hash, "#la-causa");
     await page.locator("#boletos").scrollIntoViewIfNeeded();
-    await page.getByRole("button", { name: "Comprar boletos" }).click();
-    await page
-      .getByRole("status")
-      .getByText("La venta de boletos estará disponible próximamente.")
-      .waitFor();
+    const ticketLinks = page.locator("a").filter({ hasText: /boletos/i });
+    assert.equal(await ticketLinks.count(), 3);
+    for (const link of await ticketLinks.all()) {
+      assert.equal(await link.getAttribute("href"), ticketsUrl);
+    }
+    if (mobile) {
+      const positions = await page
+        .locator(".event-details-inner")
+        .evaluate((node) =>
+          [...node.children].map((child) => child.getBoundingClientRect().top),
+        );
+      assert.ok(
+        positions.every(
+          (top, index) => index === 0 || top > positions[index - 1],
+        ),
+        "Mobile event details should read vertically in chronological order.",
+      );
+    }
     results.push({
       width,
       ...layout,
@@ -160,7 +198,7 @@ try {
   results.push({ reducedMotion: "passed" });
   await writeFile(".work/verification.json", JSON.stringify(results, null, 2));
   console.log(
-    "Passed: five responsive widths, local images, no overflow or console errors, anchors, menu, tickets, WCAG AA axe audit, reduced motion.",
+    "Passed: eight responsive widths, local images, no overflow or console errors, anchors, menu, tickets, WCAG AA axe audit, reduced motion.",
   );
 } finally {
   await browser.close();

@@ -23,5 +23,65 @@
     "source": "tanya-prodaan-7LVZt5YG69g-unsplash.jpg",
     "width": 2969,
     "height": 1914
+  },
+  "event-sparklers-red": {
+    "source": "bengalasRojo_personas_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-sparklers": {
+    "source": "bengalas_personas_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-sparklers-amber-05": {
+    "source": "bengalas_personas_ambar_05.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-music-1": {
+    "source": "musica1_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-music-2": {
+    "source": "musica2_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-music-3": {
+    "source": "musica3_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-community": {
+    "source": "personas_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "event-presenter": {
+    "source": "presentadora_color_vino.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "cause-celebration": {
+    "source": "IMG_0006.jpg",
+    "width": 2048,
+    "height": 1365
+  },
+  "manifesto-sparklers": {
+    "source": "bengala002.jpeg",
+    "width": 1008,
+    "height": 1066
+  },
+  "logo-tec": {
+    "source": "logo_Tec.png",
+    "width": 600,
+    "height": 159
+  },
+  "logo-lideres": {
+    "source": "logo_lideres.png",
+    "width": 400,
+    "height": 193
   }
 }
